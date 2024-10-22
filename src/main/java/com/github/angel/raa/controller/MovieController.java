@@ -29,8 +29,8 @@ public class MovieController {
         return ResponseEntity.ok(service.getMoviesByGenre(genero));
     }
     @GetMapping("/search")
-    public ResponseEntity<List<MovieDTO>> getMoviesByTitleAndGenre(@RequestParam(name = "titulo") String titulo, @RequestParam(name = "genero") Genero genero) {
-        return ResponseEntity.ok(service.findAll(titulo, genero));
+    public ResponseEntity<List<MovieDTO>> getMoviesByTitleAndGenre(@RequestParam(name = "titulo") String titulo, @RequestParam(name = "genero") Genero genero, @RequestParam(name = "average") Integer average) {
+        return ResponseEntity.ok(service.findAll(titulo, genero, average));
     }
 
     @PostMapping

@@ -61,9 +61,10 @@ public interface MovieService {
      * Find all movies
      * @param title
      * @param genero
+     * @Param average
      * @return List<MovieDTO>
      */
-    List<MovieDTO> findAll(String title, Genero genero);
+    List<MovieDTO> findAll(String title, Genero genero, Integer average);
 
    
 

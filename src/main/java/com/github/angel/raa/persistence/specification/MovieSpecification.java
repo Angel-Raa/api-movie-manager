@@ -1,11 +1,9 @@
 package com.github.angel.raa.persistence.specification;
 
 import com.github.angel.raa.persistence.entity.Movie;
+import com.github.angel.raa.persistence.entity.Rating;
 import com.github.angel.raa.utils.Genero;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +20,7 @@ import java.util.List;
 public class MovieSpecification implements Specification<Movie> {
     private String title;
     private Genero genero;
+    private Integer average;
     @Override
     public Predicate toPredicate(@NotNull Root<Movie> root, CriteriaQuery<?> query, @NotNull CriteriaBuilder criteriaBuilder) {
         // root = From Movie
@@ -35,6 +34,20 @@ public class MovieSpecification implements Specification<Movie> {
         if(genero != null){
             Predicate generoEqual = criteriaBuilder.equal(root.get("genero"), this.genero);
             predicates.add(generoEqual);
+        }
+
+        // Filtrar por promedio de ratings
+
+        if (average != null) {
+            // Subconsulta para calcular el promedio de las calificaciones
+            Subquery<Double> subquery = query.subquery(Double.class);
+            Root<Rating> ratingRoot = subquery.from(Rating.class);
+            subquery.select(criteriaBuilder.avg(ratingRoot.get("clasificacion")))
+                    .where(criteriaBuilder.equal(ratingRoot.get("movieId"), root.get("movieId")));
+
+            // Filtrar películas cuyo promedio de ratings sea mayor o igual al valor de `average`
+            Predicate avgPredicate = criteriaBuilder.greaterThanOrEqualTo(subquery, Double.valueOf(this.average));
+            predicates.add(avgPredicate);
         }
 
 

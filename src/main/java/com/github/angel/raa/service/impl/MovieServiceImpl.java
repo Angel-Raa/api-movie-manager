@@ -133,8 +133,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieDTO> findAll(String title, Genero genero) {
-        MovieSpecification specification = new MovieSpecification(title, genero);
+    public List<MovieDTO> findAll(String title, Genero genero, Integer average) {
+        MovieSpecification specification = new MovieSpecification(title, genero, average);
         List<Movie>  movies =  repository.findAll(specification);
         return movies.stream()
                 .map(MovieServiceImpl::mapMovieToDTO)
