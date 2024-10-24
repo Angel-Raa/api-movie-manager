@@ -38,16 +38,15 @@ public class MovieSpecification implements Specification<Movie> {
 
         // Filtrar por promedio de ratings
 
-        if (average != null) {
+        if(this.average != null && average >0 ){
             // Subconsulta para calcular el promedio de las calificaciones
-            Subquery<Double> subquery = query.subquery(Double.class);
+            Subquery<Double> subquery=  query.subquery(Double.class); // SELECT AVG(rating)
+            // Filtrar películas cuyo promedio de ratings sea mayor o igual al valor de `average`
+
             Root<Rating> ratingRoot = subquery.from(Rating.class);
-            subquery.select(criteriaBuilder.avg(ratingRoot.get("clasificacion")))
+            subquery.select(criteriaBuilder.avg(ratingRoot.get("ratings")))
                     .where(criteriaBuilder.equal(ratingRoot.get("movieId"), root.get("movieId")));
 
-            // Filtrar películas cuyo promedio de ratings sea mayor o igual al valor de `average`
-            Predicate avgPredicate = criteriaBuilder.greaterThanOrEqualTo(subquery, Double.valueOf(this.average));
-            predicates.add(avgPredicate);
         }
 
 
