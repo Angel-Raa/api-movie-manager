@@ -5,6 +5,10 @@ import com.github.angel.raa.service.MovieService;
 import com.github.angel.raa.utils.Genero;
 import com.github.angel.raa.utils.Response;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +23,8 @@ public class MovieController {
     private final MovieService service;
 
     @GetMapping
-    public ResponseEntity<List<MovieDTO>> getAllMovies() {
-        return ResponseEntity.ok(service.getAllMovies());
+    public ResponseEntity<Page<MovieDTO>> getAllMovies(@RequestParam(name = "page", defaultValue = "0", required = false)  int page, @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
+        return ResponseEntity.ok(service.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createAt"))));
     }
 
 
@@ -29,8 +33,10 @@ public class MovieController {
         return ResponseEntity.ok(service.getMoviesByGenre(genero));
     }
     @GetMapping("/search")
-    public ResponseEntity<List<MovieDTO>> getMoviesByTitleAndGenre(@RequestParam(name = "titulo") String titulo, @RequestParam(name = "genero") Genero genero, @RequestParam(name = "average") Integer average) {
-        return ResponseEntity.ok(service.findAll(titulo, genero, average));
+    public ResponseEntity<Page<MovieDTO>> getMoviesByTitleAndGenre(@RequestParam(name = "titulo") String titulo, @RequestParam(name = "genero") Genero genero, @RequestParam(name = "average") Integer average,
+                                                                   @RequestParam(defaultValue = "0", required = false) int page, @RequestParam(defaultValue = "10", required = false) int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(service.findAll(titulo, genero, average, pageable));
     }
 
     @PostMapping

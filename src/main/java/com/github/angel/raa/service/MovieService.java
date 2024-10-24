@@ -3,6 +3,8 @@ package com.github.angel.raa.service;
 import com.github.angel.raa.dto.MovieDTO;
 import com.github.angel.raa.utils.Genero;
 import com.github.angel.raa.utils.Response;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -64,7 +66,9 @@ public interface MovieService {
      * @Param average
      * @return List<MovieDTO>
      */
-    List<MovieDTO> findAll(String title, Genero genero, Integer average);
+    Page<MovieDTO> findAll(String title, Genero genero, Integer average, Pageable pageable);
+
+    Page<MovieDTO> findAll(Pageable pageable);
 
    
 

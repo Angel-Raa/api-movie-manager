@@ -4,6 +4,8 @@ import com.github.angel.raa.dto.MovieDTO;
 import com.github.angel.raa.persistence.entity.Movie;
 import com.github.angel.raa.utils.Genero;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListPagingAndSortingRepository;
@@ -28,6 +30,15 @@ public interface MovieRepository extends ListPagingAndSortingRepository<Movie, L
     Optional<MovieDTO> findByIdDto(@Param("id") Long id);
 
     boolean existsByTitulo(String titulo);
+
+    // Paginacion y Ordenamiento
+
+    @Query(value = """
+            SELECT NEW com.github.angel.raa.dto.MovieDTO(m.movieId, m.titulo, m.director, m.descripcion, m.releaseYear, m.genero)
+            FROM Movie m
+            """, countQuery = "SELECT COUNT(m) FROM Movie m")
+    Page<MovieDTO> findAllPage(Pageable pageable);
+
 
 
 }

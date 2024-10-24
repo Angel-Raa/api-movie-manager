@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ import static java.time.LocalDateTime.now;
 public class MovieServiceImpl implements MovieService {
     private final MovieRepository repository;
 
+
     private static MovieDTO mapMovieToDTO(@NotNull Movie movie) {
         return MovieDTO.builder()
                 .movieId(movie.getMovieId())
@@ -36,7 +39,6 @@ public class MovieServiceImpl implements MovieService {
                 .releaseYear(movie.getReleaseYear())
                 .build();
     }
-
     private static Movie mapDTOToMovie(@NotNull MovieDTO movieDTO) {
         return Movie.builder()
                 .movieId(movieDTO.getMovieId())
@@ -133,11 +135,17 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieDTO> findAll(String title, Genero genero, Integer average) {
+    public Page<MovieDTO> findAll(String title, Genero genero, Integer average, Pageable pageable) {
         MovieSpecification specification = new MovieSpecification(title, genero, average);
-        List<Movie>  movies =  repository.findAll(specification);
-        return movies.stream()
-                .map(MovieServiceImpl::mapMovieToDTO)
-                .toList();
+        Page<Movie>  movies =  repository.findAll(specification, pageable);
+        return movies.map(MovieServiceImpl::mapMovieToDTO);
+
+    }
+
+
+
+    @Override
+    public Page<MovieDTO> findAll(Pageable pageable) {
+        return repository.findAllPage(pageable);
     }
 }
