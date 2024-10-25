@@ -39,12 +39,24 @@ public interface MovieRepository extends ListPagingAndSortingRepository<Movie, L
             """, countQuery = "SELECT COUNT(m) FROM Movie m")
     Page<MovieDTO> findAllPage(Pageable pageable);
 
-    @Query(value = """
-            SELECT NEW com.github.angel.raa.dto.MovieDTO(
+    /**
+     * Busca películas por género y las devuelve paginadas en forma de DTO.
+     *
+     * @param genero el género de la película que se desea buscar
+     * @param pageable objeto que define la paginación y orden de los resultados
+     * @return una página de películas en el formato MovieDTO
+     */
+    @Query(
+            value = """
+        SELECT NEW com.github.angel.raa.dto.MovieDTO(
             m.movieId, m.titulo, m.director, m.descripcion, m.releaseYear, m.genero
-            )FROM Movie m WHERE m.genero =:genero
-            """,countQuery = "SELECT COUNT(m) FROM Movie m WHERE m.genero =:genero")
-    Page<MovieDTO> findByGenero( @Param(value = "genero") Genero genero, Pageable pageable);
+        )
+        FROM Movie m
+        WHERE m.genero = :genero
+    """,
+            countQuery = "SELECT COUNT(m) FROM Movie m WHERE m.genero = :genero"
+    )
+    Page<MovieDTO> findMoviesByGenero(@Param("genero") Genero genero, Pageable pageable);
 
 
 
