@@ -21,9 +21,9 @@ public interface MovieService {
     /**
      * Get movies by genre
      * @param genero
-     * @return List<MovieDTO>
+     * @return Page<MovieDTO>
      */
-    List<MovieDTO> getMoviesByGenre(Genero genero);
+    Page<MovieDTO> getMoviesByGenre(Genero genero, Pageable pageable);
 
     /**
      * Get movies by title and genre

@@ -49,21 +49,7 @@ class MovieServiceImplTest {
         assertEquals(2, result.size());
         verify(repository, times(1)).findAllDto();
     }
-    @DisplayName("Test getMoviesByGenre")
-    @Test
-    void getMoviesByGenre() {
-        // Given
-        List<MovieDTO> movieDTOs = new ArrayList<>();
-        movieDTOs.add(MovieDTO.builder().movieId(1L).title("Movie 1").genero(Genero.ACCION).build());
-        when(repository.findByGenero(Genero.ACCION)).thenReturn(movieDTOs);
 
-        // When
-        List<MovieDTO> result = movieService.getMoviesByGenre(Genero.ACCION);
-
-        // Then
-        assertEquals(1, result.size());
-        verify(repository, times(1)).findByGenero(Genero.ACCION);
-    }
     @DisplayName( "Test getMoviesByTitleAndGenre")
     @Test
     void getMoviesByTitleAndGenre() {

@@ -39,6 +39,13 @@ public interface MovieRepository extends ListPagingAndSortingRepository<Movie, L
             """, countQuery = "SELECT COUNT(m) FROM Movie m")
     Page<MovieDTO> findAllPage(Pageable pageable);
 
+    @Query(value = """
+            SELECT NEW com.github.angel.raa.dto.MovieDTO(
+            m.movieId, m.titulo, m.director, m.descripcion, m.releaseYear, m.genero
+            )FROM Movie m WHERE m.genero =:genero
+            """,countQuery = "SELECT COUNT(m) FROM Movie m WHERE m.genero =:genero")
+    Page<MovieDTO> findByGenero( @Param(value = "genero") Genero genero, Pageable pageable);
+
 
 
 }

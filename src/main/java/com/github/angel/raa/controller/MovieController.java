@@ -29,8 +29,9 @@ public class MovieController {
 
 
     @GetMapping("/genre")
-    public ResponseEntity<List<MovieDTO>> getMoviesByGenre(@RequestParam(name = "genero") Genero genero) {
-        return ResponseEntity.ok(service.getMoviesByGenre(genero));
+    public ResponseEntity<Page<MovieDTO>> getMoviesByGenre(@RequestParam(name = "genero") Genero genero, Pageable pageable) {
+
+        return ResponseEntity.ok(service.getMoviesByGenre(genero, pageable));
     }
     @GetMapping("/search")
     public ResponseEntity<Page<MovieDTO>> getMoviesByTitleAndGenre(@RequestParam(name = "titulo") String titulo, @RequestParam(name = "genero") Genero genero, @RequestParam(name = "average") Integer average,
