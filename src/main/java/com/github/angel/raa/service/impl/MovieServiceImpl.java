@@ -63,7 +63,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Page<MovieDTO> getMoviesByGenre(Genero genero, Pageable pageable) {
         log.info("search movie by genre {}", genero);
-        return repository.findByGenero(genero, pageable);
+        return repository.findMoviesByGenero(genero, pageable);
     }
 
     @Transactional(readOnly = true)

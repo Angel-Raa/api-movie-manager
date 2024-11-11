@@ -6,12 +6,17 @@ import com.github.angel.raa.persistence.entity.User;
 import com.github.angel.raa.persistence.repository.UserRepository;
 import com.github.angel.raa.service.UserService;
 import com.github.angel.raa.utils.Response;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -40,9 +45,30 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
+    public Page<UserDTO> getAllPage(Pageable pageable) {
+        return repository.findAllPage(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<UserDTO> getUsersByName(String name) {
         log.info("Fetching users by name: {}", name);
         return repository.findByNameContainingIgnoreCase(name);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Page<UserDTO> getUsersByName(String name, Pageable pageable) {
+        // repository.findByNameContainingIgnoreCase(name, pageable);
+        Specification<User> user = (root, query, criteriaBuilder) -> {
+           if(StringUtils.hasText(name)){
+               Predicate like = criteriaBuilder.like(root.get("name"), "%" + name  + "%");
+               return like;
+           }
+            return null;
+        };
+
+        return null;
     }
 
     @Transactional(readOnly = true)

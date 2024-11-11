@@ -3,6 +3,8 @@ package com.github.angel.raa.service;
 import com.github.angel.raa.dto.UserDTO;
 import com.github.angel.raa.persistence.entity.User;
 import com.github.angel.raa.utils.Response;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,12 +18,26 @@ public interface UserService {
      * @return a list of users.
      */
     List<UserDTO> getAllUsers();
+
+    /**
+     * Get all users with pagination.
+     * @param pageable
+     * @return
+     */
+    Page<UserDTO> getAllPage(Pageable pageable);
     /**
      * Get users by name.
      * @param name the name of the user.
      * @return a list of users.
      */
     List<UserDTO> getUsersByName(String name);
+    /**
+     * Get users by name with pagination.
+     * @param name the name of the user.
+     * @param pageable the pagination.
+     * @return a list of users.
+     */
+    Page<UserDTO> getUsersByName(String name, Pageable pageable);
     /**
      * Get user by id.
      * @param id the id of the user.
@@ -65,6 +81,7 @@ public interface UserService {
      * @return the updated user.
      */
     Response<String> updateByUsername(String oldUsername, String newUsername);
+
 
 
 

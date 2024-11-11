@@ -7,6 +7,9 @@ import com.github.angel.raa.service.UserService;
 import com.github.angel.raa.utils.Response;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,9 +27,28 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/name")
+    @GetMapping("/search")
+    public ResponseEntity<Page<UserDTO>> getAllPage(
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "10", required = false) int size
+    ){
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(userService.getAllPage(pageable));
+    }
+
+    //@GetMapping("/name")
     public ResponseEntity<List<UserDTO>> getUsersByName(@RequestParam String name) {
         return ResponseEntity.ok(userService.getUsersByName(name));
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<Page<UserDTO>> getUserByName(
+            @RequestParam String name,
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "10", required = false) int size
+    ){
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(userService.getUsersByName(name, pageable));
     }
 
     @GetMapping("/{userId}")
