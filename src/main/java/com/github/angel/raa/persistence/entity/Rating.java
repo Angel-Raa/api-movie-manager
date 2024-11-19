@@ -1,7 +1,6 @@
 package com.github.angel.raa.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
@@ -11,7 +10,8 @@ import org.hibernate.type.SqlTypes;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Table(name = "ratings")
+
+@Table(name = "ratings", uniqueConstraints = @UniqueConstraint(columnNames = { "fk_movie_id", "fk_user_id"}))
 @Entity(name = "Rating")
 @AllArgsConstructor
 @NoArgsConstructor
